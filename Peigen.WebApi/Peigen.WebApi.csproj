@@ -43,6 +43,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.4.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.4.0\lib\net45\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="log4net, Version=2.0.7.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.7\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
@@ -148,10 +152,13 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\DIContainer.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="AreaRegistation\AreaName.cs" />
+    <Compile Include="Areas\Management\Controllers\DefaultController.cs" />
     <Compile Include="Areas\Management\Controllers\IndexController.cs" />
+    <Compile Include="Areas\Management\Controllers\WeiXinController.cs" />
     <Compile Include="Areas\Management\ManagementAreasRegistration.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -178,10 +185,25 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Management\Model\" />
     <Folder Include="Areas\Management\Views\Index\" />
+    <Folder Include="Areas\Management\Views\WeiXin\" />
     <Folder Include="Areas\Management\View\" />
     <Folder Include="Areas\Mweb\" />
     <Folder Include="Controllers\" />
     <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Peigen.Domain\Peigen.Domain.csproj">
+      <Project>{B997F187-8E2B-44E6-AB77-D3024D63809F}</Project>
+      <Name>Peigen.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Peigen.Repository\Peigen.Repository.csproj">
+      <Project>{8E2903D7-0D5A-4C50-9EF7-F94DC56CF43D}</Project>
+      <Name>Peigen.Repository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Peigen.Service\Peigen.Service.csproj">
+      <Project>{50723D84-D977-469F-855B-EA77FD3A8BF7}</Project>
+      <Name>Peigen.Service</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -18,6 +18,7 @@ namespace Peigen.WebApi
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+            DIContainer.Init();
         }
     }
 }
