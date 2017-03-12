@@ -1,37 +1,33 @@
 ﻿using Autofac;
+using Autofac.Integration.WebApi;
 using Peigen.Repository;
-using Peigen.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Reflection;
+using System.Web.Http;
 
 namespace Peigen.WebApi
 {
     public class DIContainer
     {
-        private static IContainer _container;
-        public static void Dispose()
-        {
-            if (_container != null)
-            {
-                _container.Dispose();
-                _container = null;
-            }
-        }
+        
 
         public static void Init()
         {
             ContainerBuilder builder = new ContainerBuilder();
-            builder.RegisterType<DatabaseFactory>().As<IDatabaseFactory>().InstancePerLifetimeScope();
-            builder.RegisterAssemblyTypes(typeof(PublicNumberRepository).Assembly)
-                .Where(t => t.Name.EndsWith("Repository"))
-                .AsImplementedInterfaces().InstancePerLifetimeScope();
-            builder.RegisterAssemblyTypes(typeof(WeiXinService).Assembly)
-                .Where(t => t.Name.EndsWith("Service"))
-                .AsImplementedInterfaces().InstancePerLifetimeScope();
+            HttpConfiguration config = GlobalConfiguration.Configuration;
+            builder.RegisterApiControllers(Assembly.GetExecutingAssembly()).PropertiesAutowired();//注册api容器的实现
 
-            _container = builder.Build();
+
+            builder.RegisterType<DatabaseFactory>().As<IDatabaseFactory>().InstancePerLifetimeScope();
+            //builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
+
+            //builder.RegisterAssemblyTypes(typeof(StuEducationRepo).Assembly)
+            //    .Where(t => t.Name.EndsWith("Repo"))
+            //    .AsImplementedInterfaces().InstancePerLifetimeScope();
+
+            builder.RegisterWebApiFilterProvider(GlobalConfiguration.Configuration);
+            IContainer container = builder.Build();
+            config.DependencyResolver = new AutofacWebApiDependencyResolver(container);//注册api容器需要使用HttpConfiguration对象     
+
         }
     }
 }

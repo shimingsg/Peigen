@@ -47,6 +47,10 @@
       <HintPath>..\packages\Autofac.4.4.0\lib\net45\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Autofac.Integration.WebApi, Version=4.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.WebApi2.4.0.1\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="log4net, Version=2.0.7.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.7\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
@@ -156,8 +160,6 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="AreaRegistation\AreaName.cs" />
-    <Compile Include="Areas\Management\Controllers\DefaultController.cs" />
-    <Compile Include="Areas\Management\Controllers\IndexController.cs" />
     <Compile Include="Areas\Management\Controllers\WeiXinController.cs" />
     <Compile Include="Areas\Management\ManagementAreasRegistration.cs" />
     <Compile Include="Global.asax.cs">
@@ -184,9 +186,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Management\Model\" />
-    <Folder Include="Areas\Management\Views\Index\" />
-    <Folder Include="Areas\Management\Views\WeiXin\" />
-    <Folder Include="Areas\Management\View\" />
+    <Folder Include="Areas\Management\Views\" />
     <Folder Include="Areas\Mweb\" />
     <Folder Include="Controllers\" />
     <Folder Include="Models\" />

@@ -8,20 +8,19 @@ using System.Web.Http;
 
 namespace Peigen.WebApi.Areas.Management.Controllers
 {    
-    [RoutePrefix("api/WeiXin")]
     public class WeiXinController : ApiController
     {
-        private readonly IWeiXinService weixinService;
-        public WeiXinController(IWeiXinService _weixinService)
-        {
-            weixinService = _weixinService;
-        }
-        [Route("GetSomething")]
+        private IWeiXinService weixinService;
+        //public WeiXinController(IWeiXinService _weixinService)
+        //{
+        //    weixinService = _weixinService;
+        //}
+        
         public string GetSomething()
         {
             return "你很棒";
         }
-        [Route("GetById")]
+       
         public PublicNumberEntity GetById(int id)
         {
             return weixinService.GetById(id);
