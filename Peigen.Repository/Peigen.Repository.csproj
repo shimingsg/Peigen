@@ -55,6 +55,7 @@
     <Compile Include="DbContext\Disposable.cs" />
     <Compile Include="DbContext\IDatabaseFactory.cs" />
     <Compile Include="DbContext\RepositoryBase.cs" />
+    <Compile Include="Map\PublicNumberMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PublicNumberRepository.cs" />
   </ItemGroup>

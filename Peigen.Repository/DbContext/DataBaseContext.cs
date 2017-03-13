@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Peigen.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -14,9 +15,12 @@ namespace Peigen.Repository
 
         }
 
+        public DbSet<PublicNumberEntity> PublicNumberDbSet { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            //modelBuilder.Configurations.Add(new PublicNumberMap());
+            modelBuilder.Entity<PublicNumberEntity>().MapToStoredProcedures().ToTable("T_PublicNumber");
         }
     }
 }

@@ -11,11 +11,11 @@ namespace Peigen.WebApi.Areas.Management.Controllers
     public class WeiXinController : ApiController
     {
         private IWeiXinService weixinService;
-        //public WeiXinController(IWeiXinService _weixinService)
-        //{
-        //    weixinService = _weixinService;
-        //}
-        
+        public WeiXinController(IWeiXinService _weixinService)
+        {
+            weixinService = _weixinService;
+        }
+
         public string GetSomething()
         {
             return "你很棒";

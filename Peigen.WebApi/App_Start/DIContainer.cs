@@ -1,6 +1,8 @@
 ﻿using Autofac;
 using Autofac.Integration.WebApi;
+using Peigen.Domain.IEntityRepository;
 using Peigen.Repository;
+using Peigen.Service;
 using System.Reflection;
 using System.Web.Http;
 
@@ -15,8 +17,8 @@ namespace Peigen.WebApi
             ContainerBuilder builder = new ContainerBuilder();
             HttpConfiguration config = GlobalConfiguration.Configuration;
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly()).PropertiesAutowired();//注册api容器的实现
-
-
+            builder.RegisterType<WeiXinService>().As<IWeiXinService>().InstancePerLifetimeScope();
+            builder.RegisterType<PublicNumberRepository>().As<IPublicNumberRepository>().InstancePerLifetimeScope();
             builder.RegisterType<DatabaseFactory>().As<IDatabaseFactory>().InstancePerLifetimeScope();
             //builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
 
