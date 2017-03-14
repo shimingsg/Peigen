@@ -16,16 +16,14 @@ namespace Peigen.WebApi
         {
             ContainerBuilder builder = new ContainerBuilder();
             HttpConfiguration config = GlobalConfiguration.Configuration;
+            
+            var repository = Assembly.Load("Peigen.Repository");
+            builder.RegisterAssemblyTypes(repository, repository).Where(t=>t.Name.EndsWith("Repository")).AsImplementedInterfaces();              
+            var service = Assembly.Load("Peigen.Service");
+            //builder.RegisterAssemblyTypes(service, service).Where(t => t.Name.EndsWith("Service")).AsImplementedInterfaces();            
+            builder.RegisterAssemblyTypes(typeof(MemberService).Assembly).Where(t => t.Name.EndsWith("Service")).AsImplementedInterfaces();
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly()).PropertiesAutowired();//注册api容器的实现
-            builder.RegisterType<WeiXinService>().As<IWeiXinService>().InstancePerLifetimeScope();
-            builder.RegisterType<PublicNumberRepository>().As<IPublicNumberRepository>().InstancePerLifetimeScope();
             builder.RegisterType<DatabaseFactory>().As<IDatabaseFactory>().InstancePerLifetimeScope();
-            //builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
-
-            //builder.RegisterAssemblyTypes(typeof(StuEducationRepo).Assembly)
-            //    .Where(t => t.Name.EndsWith("Repo"))
-            //    .AsImplementedInterfaces().InstancePerLifetimeScope();
-
             builder.RegisterWebApiFilterProvider(GlobalConfiguration.Configuration);
             IContainer container = builder.Build();
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);//注册api容器需要使用HttpConfiguration对象     

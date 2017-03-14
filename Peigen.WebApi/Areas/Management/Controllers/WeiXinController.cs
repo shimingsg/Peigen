@@ -11,14 +11,28 @@ namespace Peigen.WebApi.Areas.Management.Controllers
     public class WeiXinController : ApiController
     {
         private IWeiXinService weixinService;
-        public WeiXinController(IWeiXinService _weixinService)
+        private IMemberService memberService;
+        public WeiXinController(IWeiXinService _weixinService,IMemberService _memberService)
         {
             weixinService = _weixinService;
+            memberService = _memberService;
         }
 
-        public string GetSomething()
+        public string GetUserName()
         {
-            return "你很棒";
+            return memberService.GetUserName();
+        }
+
+        public string GetSomething(int a,int b)
+        {
+            //return "你很棒";
+            //var a = 16;
+            //var b = 5;
+            //var c = Math.Ceiling((decimal)a / b);
+            int[] numbers = { };
+            int[] first3Numbers = numbers.Take(30).ToArray();
+
+            return "";
         }
        
         public PublicNumberEntity GetById(int id)
