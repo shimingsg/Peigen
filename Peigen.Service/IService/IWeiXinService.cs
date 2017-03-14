@@ -9,6 +9,7 @@ namespace Peigen.Service
 {
     public interface IWeiXinService
     {
-        PublicNumberEntity GetById(int id); 
+        PublicNumberEntity GetById(int id);
+        List<PublicNumberEntity> GetMany(int type);
     }
 }

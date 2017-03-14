@@ -20,5 +20,10 @@ namespace Peigen.Service
         {
             return _publicNumberRepository.GetById(id);          
         }
+
+        public List<PublicNumberEntity> GetMany(int type) 
+        {
+           return _publicNumberRepository.GetMany(p => p.F_NumberType == type).ToList();            
+        }
     }
 }

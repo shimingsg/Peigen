@@ -19,8 +19,9 @@ namespace Peigen.Repository
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            //modelBuilder.Configurations.Add(new PublicNumberMap());
-            modelBuilder.Entity<PublicNumberEntity>().MapToStoredProcedures().ToTable("T_PublicNumber");
+            modelBuilder.Configurations.Add(new PublicNumberMap());
+            base.OnModelCreating(modelBuilder);
+            //modelBuilder.Entity<PublicNumberEntity>().MapToStoredProcedures().ToTable("T_PublicNumber");
         }
     }
 }

@@ -39,5 +39,10 @@ namespace Peigen.WebApi.Areas.Management.Controllers
         {
             return weixinService.GetById(id);
         }
+
+        public List<PublicNumberEntity> GetList(int type)
+        {
+            return weixinService.GetMany(type);
+        }
     }
 }
