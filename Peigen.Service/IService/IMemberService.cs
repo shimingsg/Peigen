@@ -10,4 +10,13 @@ namespace Peigen.Service
     {
         string GetUserName();
     }
+
+    //简单容器
+    public class MemberFactory
+    {
+        public static IMemberService GetFactory()
+        {
+            return new MemberService();
+        }
+    }
 }

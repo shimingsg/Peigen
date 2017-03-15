@@ -3,12 +3,13 @@
 // File Description:AccessToken DataBase Entity 
 // Author:Gen 
 // Create Time:2017/03/12 01:59:58 
-//------------------------------------------------*/  
+//------------------------------------------------*/
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
- 
 namespace Peigen.Domain.Entities
 {
+    [Table("T_AccessToken")]
     public class AccessTokenEntity
     {
         /// <summary>

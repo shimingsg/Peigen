@@ -31,7 +31,7 @@ namespace Peigen.WebApi.Areas.Management.Controllers
             //var c = Math.Ceiling((decimal)a / b);
             int[] numbers = { };
             int[] first3Numbers = numbers.Take(30).ToArray();
-
+            MemberFactory.GetFactory().GetUserName();
             return "";
         }
        
@@ -44,5 +44,7 @@ namespace Peigen.WebApi.Areas.Management.Controllers
         {
             return weixinService.GetMany(type);
         }
+
+
     }
 }
