@@ -167,6 +167,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="AreaRegistation\AreaName.cs" />
+    <Compile Include="Areas\Management\Controllers\TestController.cs" />
     <Compile Include="Areas\Management\Controllers\WeiXinController.cs" />
     <Compile Include="Areas\Management\ManagementAreasRegistration.cs" />
     <Compile Include="Common\APIValueProvider.cs" />
