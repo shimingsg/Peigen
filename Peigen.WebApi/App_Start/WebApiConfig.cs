@@ -24,8 +24,8 @@ namespace Peigen.WebApi
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+            config.ParameterBindingRules.Insert(0, CustomParameterBinding.GetCustomParameterBinding);
 
-            
         }
     }
 }

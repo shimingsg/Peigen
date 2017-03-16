@@ -79,5 +79,12 @@ namespace Peigen.WebApi.Areas.Management.Controllers
             var response = client.PostAsJsonAsync(url, jObject).Result;
 
         }
+
+        [HttpPost]
+        public HttpResponseMessage PostMultipleParametersFromBody(string firstname, string lastname, int id)
+        {
+            return Request.CreateResponse(System.Net.HttpStatusCode.Accepted,
+                String.Format("{2}BindCustomCoPostMultipleParametersFromBodymplexType FristName = {0}, LastName = {1}.", firstname, lastname, id));
+        }
     }
 }
