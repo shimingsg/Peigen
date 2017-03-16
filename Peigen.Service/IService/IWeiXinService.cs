@@ -11,5 +11,7 @@ namespace Peigen.Service
     {
         PublicNumberEntity GetById(int id);
         List<PublicNumberEntity> GetMany(int type);
+        PublicNumberEntity Add(int id);
+        PublicNumberEntity AddModel(PublicNumberEntity model);
     }
 }

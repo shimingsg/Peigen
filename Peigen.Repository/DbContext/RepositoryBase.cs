@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Peigen.Repository
 {
+    //此抽象类只能处理EF的数据仓储
     public abstract class RepositoryBase<T> where T: class
     {
         private DataBaseContext dataContext;
@@ -29,15 +30,34 @@ namespace Peigen.Repository
             DatabaseFactory = databaseFactory;
             dbset = DataContext.Set<T>();
         }
+        #region 数据保存
+        /// <summary>
+        /// 保存到数据库
+        /// 同步
+        /// </summary>
+        public virtual void Save()
+        {
+            dataContext.SaveChanges();
+        }
 
+        /// <summary>
+        /// 保存到数据库
+        /// 异步
+        /// </summary>
+        public void AsyncSave()
+        {
+            DataContext.SaveChangesAsync();
+        }
+        #endregion
         #region 增删查改
         /// <summary>
         /// 添加单条记录
         /// </summary>
         /// <param name="entity">实体类</param>
-        public virtual void Add(T entity)
+        public T Add(T entity)
         {
             dbset.Add(entity);
+            return entity;
         }
         /// <summary>
         /// 添加多条

@@ -1,8 +1,12 @@
-﻿using Peigen.Domain.Entities;
+﻿using Newtonsoft.Json.Linq;
+using Peigen.Domain.Entities;
 using Peigen.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Web;
 using System.Web.Http;
 
@@ -23,6 +27,7 @@ namespace Peigen.WebApi.Areas.Management.Controllers
             return memberService.GetUserName();
         }
 
+        [HttpPost]
         public string GetSomething(int a,int b)
         {
             //return "你很棒";
@@ -45,6 +50,34 @@ namespace Peigen.WebApi.Areas.Management.Controllers
             return weixinService.GetMany(type);
         }
 
+        public PublicNumberEntity Add(int id)
+        {
+            return weixinService.Add(id);
+        }
 
+        [HttpPost]
+        public void AddModel(user value)
+        {
+            var req = value.ToString();
+        }
+
+        public class user
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+        }
+
+        [HttpPost]
+        public void NewMethod()
+        {
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            string url = "http://api.gen.com/api/WeiXin/AddModel";
+
+            var json = "{ \"Id\": \"10\",\"Name\": \"peigen\" }";
+            var jObject = JObject.Parse(json);
+            var response = client.PostAsJsonAsync(url, jObject).Result;
+
+        }
     }
 }

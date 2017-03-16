@@ -17,13 +17,26 @@ namespace Peigen.Service
         }
 
         public PublicNumberEntity GetById(int id)
-        {
+        {            
             return _publicNumberRepository.GetById(id);          
         }
 
         public List<PublicNumberEntity> GetMany(int type) 
         {
            return _publicNumberRepository.GetMany(p => p.F_NumberType == type).ToList();            
+        }
+
+        public PublicNumberEntity Add(int id)
+        {
+            var entity = _publicNumberRepository.GetById(id);
+            var result = _publicNumberRepository.Add(entity);
+            _publicNumberRepository.Save();
+            return result;
+        }
+
+        public PublicNumberEntity AddModel(PublicNumberEntity model)
+        {
+            return model;
         }
     }
 }

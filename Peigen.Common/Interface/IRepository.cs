@@ -9,8 +9,10 @@ namespace Peigen.Common.Interface
 {
     public interface IRepository<T> where T:class
     {
+        void Save();
+        void AsyncSave();
         //增
-        void Add(T entity);
+        T Add(T entity);
         void AddAll(IEnumerable<T> entities);
         //改
         void Update(T entity);

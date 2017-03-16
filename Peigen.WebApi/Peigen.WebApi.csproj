@@ -169,6 +169,9 @@
     <Compile Include="AreaRegistation\AreaName.cs" />
     <Compile Include="Areas\Management\Controllers\WeiXinController.cs" />
     <Compile Include="Areas\Management\ManagementAreasRegistration.cs" />
+    <Compile Include="Common\APIValueProvider.cs" />
+    <Compile Include="Common\APIValueProviderFactory.cs" />
+    <Compile Include="Common\JsonValueProviderResult.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
