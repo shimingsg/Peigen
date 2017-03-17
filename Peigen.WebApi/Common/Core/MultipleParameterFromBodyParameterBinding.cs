@@ -30,8 +30,24 @@ namespace Peigen.WebApi
                 throw new HttpResponseException(System.Net.HttpStatusCode.BadRequest);
             }
 
+            if (Descriptor.ParameterType == typeof(int))
+            {
+                int i = 0;
+                int.TryParse(col[Descriptor.ParameterName], out i);
+                SetValue(actionContext,i);
+            }
+            else if(Descriptor.ParameterType == typeof(bool))
+            {
+                bool flag = false;
+                bool.TryParse(col[Descriptor.ParameterName], out flag);
+                SetValue(actionContext, flag);
+            }
+            else
+            {
+                SetValue(actionContext, col[Descriptor.ParameterName]);
+            }
             // Set the binding result here
-            SetValue(actionContext, col[Descriptor.ParameterName]);
+            
 
             // now, we can return a completed task with no result
             TaskCompletionSource<AsyncVoid> tcs = new TaskCompletionSource<AsyncVoid>();

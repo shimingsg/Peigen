@@ -26,12 +26,12 @@ namespace Peigen.WebApi
         {
             if (actionContext.Request.Content != null && actionContext.Request.Content.Headers.ContentLength > 0)
             {
-                // we have something from the body, try that first
+                // [FromBody]读取信息
                 return _defaultFormatterBinding.ExecuteBindingAsync(metadataProvider, actionContext, cancellationToken);
             }
             else
             {
-                // we need to read things from uri
+                // [FromUri]读取信息
                 return _defaultUriBinding.ExecuteBindingAsync(metadataProvider, actionContext, cancellationToken);
             }
         }

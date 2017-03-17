@@ -81,10 +81,16 @@ namespace Peigen.WebApi.Areas.Management.Controllers
         }
 
         [HttpPost]
-        public HttpResponseMessage PostMultipleParametersFromBody(string firstname, string lastname, int id)
+        public HttpResponseMessage PostMultipleParametersFromBody(string firstname, string lastname, int id,bool a)
         {
             return Request.CreateResponse(System.Net.HttpStatusCode.Accepted,
                 String.Format("{2}BindCustomCoPostMultipleParametersFromBodymplexType FristName = {0}, LastName = {1}.", firstname, lastname, id));
+        }
+
+        [HttpPost]
+        public HttpResponseMessage PostComplex(string name,user model)
+        {
+            return Request.CreateResponse(System.Net.HttpStatusCode.Accepted, $"{name}{model.Id}");
         }
     }
 }
