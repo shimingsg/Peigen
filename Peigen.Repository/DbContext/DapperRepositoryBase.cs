@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using Dapper.Contrib.Extensions;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -9,46 +9,20 @@ using System.Threading.Tasks;
 
 namespace Peigen.Repository
 {
-    //此抽象类只能处理EF的数据仓储
-    public abstract class RepositoryBase<T> where T: class
+    public abstract class DapperRepositoryBase<T> where T:class  
     {
-        private DataBaseContext dataContext;
-        private readonly DbSet<T> dbset;
-
-        protected IDatabaseFactory DatabaseFactory
+        private static readonly ConcurrentDictionary<RuntimeTypeHandle, string> TypeTableName = new ConcurrentDictionary<RuntimeTypeHandle, string>();
+        private static string GetTableName(Type type)
         {
-            get;
-            private set;
-        }
-        protected DataBaseContext DataContext
-        {
-            get { return dataContext ?? (dataContext = DatabaseFactory.Get()); }
-        }
-
-        protected RepositoryBase(IDatabaseFactory databaseFactory)
-        {
-            DatabaseFactory = databaseFactory;
-            dbset = DataContext.Set<T>();
-        }
-        #region 数据保存
-        /// <summary>
-        /// 保存到数据库
-        /// 同步
-        /// </summary>
-        public virtual void Save()
-        {
-            dataContext.SaveChanges();
+            string name;
+            if (!TypeTableName.TryGetValue(type.TypeHandle, out name))
+            {
+                name = DataBaseContext.GetTableName(type);
+                TypeTableName[type.TypeHandle] = name;
+            }
+            return name;
         }
 
-        /// <summary>
-        /// 保存到数据库
-        /// 异步
-        /// </summary>
-        public void AsyncSave()
-        {
-            DataContext.SaveChangesAsync();
-        }
-        #endregion
         #region 增删查改
         /// <summary>
         /// 添加单条记录
@@ -56,7 +30,10 @@ namespace Peigen.Repository
         /// <param name="entity">实体类</param>
         public void Add(T entity)
         {
-            dbset.Add(entity);            
+            using (var conn= DataBaseContext.GetDefaultConnection())
+            {
+                conn.Insert<T>(entity);                
+            }
         }
         /// <summary>
         /// 添加多条
@@ -64,7 +41,7 @@ namespace Peigen.Repository
         /// <param name="entities"></param>
         public virtual void AddAll(IEnumerable<T> entities)
         {
-            dbset.AddRange(entities);
+            throw new NotImplementedException();//请自己写sql并写事务
         }
         /// <summary>
         /// 更新一条
@@ -72,9 +49,10 @@ namespace Peigen.Repository
         /// <param name="entity"></param>
         public virtual void Update(T entity)
         {
-            //Attach要附加的实体。
-            dbset.Attach(entity);           
-            dataContext.Entry(entity).State = EntityState.Modified;
+            using (var conn = DataBaseContext.GetDefaultConnection())
+            {
+                conn.Update<T>(entity);
+            }
         }
         /// <summary>
         /// 更新多条
@@ -82,11 +60,7 @@ namespace Peigen.Repository
         /// <param name="entities"></param>
         public virtual void Update(IEnumerable<T> entities)
         {
-            foreach (var item in entities)
-            {
-                dbset.Attach(item);
-                dataContext.Entry(item).State = EntityState.Modified;
-            }
+            throw new NotImplementedException();
         }
         /// <summary>
         /// 删除单条
@@ -94,7 +68,10 @@ namespace Peigen.Repository
         /// <param name="entity"></param>
         public virtual void Delete(T entity)
         {
-            dbset.Remove(entity);
+            using (var conn = DataBaseContext.GetDefaultConnection())
+            {
+                conn.Delete<T>(entity);
+            }
         }
         /// <summary>
         /// 按条件删除
@@ -102,8 +79,7 @@ namespace Peigen.Repository
         /// <param name="where"></param>
         public virtual void Delete(Expression<Func<T, bool>> where)
         {
-            IEnumerable<T> objects = dbset.Where<T>(where).AsEnumerable();
-            dbset.RemoveRange(objects);
+            throw new NotImplementedException();
         }
         /// <summary>
         /// 删除多条
@@ -111,7 +87,7 @@ namespace Peigen.Repository
         /// <param name="entities"></param>
         public virtual void DeleteAll(IEnumerable<T> entities)
         {
-            dbset.RemoveRange(entities);
+            throw new NotImplementedException();
         }
         public virtual void Clear()
         {
@@ -124,7 +100,10 @@ namespace Peigen.Repository
         /// <returns></returns>
         public virtual T GetById(long id)
         {
-            return dbset.Find(id);
+            using (var conn = DataBaseContext.GetDefaultConnection())
+            {
+                return conn.Get<T>(id);
+            }
         }
         /// <summary>
         /// 根据Id得到实体
@@ -133,7 +112,10 @@ namespace Peigen.Repository
         /// <returns></returns>
         public virtual T GetById(string id)
         {
-            return dbset.Find(id);
+            using (var conn = DataBaseContext.GetDefaultConnection())
+            {
+                return conn.Get<T>(id);
+            }
         }
         /// <summary>
         /// 得到所有实体
@@ -141,7 +123,7 @@ namespace Peigen.Repository
         /// <returns></returns>
         public virtual IEnumerable<T> GetAll()
         {
-            return dbset.ToList();
+            throw new NotImplementedException();
         }
         /// <summary>
         /// 按条件得到多条实体
@@ -150,7 +132,7 @@ namespace Peigen.Repository
         /// <returns></returns>
         public virtual IEnumerable<T> GetMany(Expression<Func<T, bool>> where)
         {
-            return dbset.Where(where).ToList();
+            throw new NotImplementedException();
         }
         /// <summary>
         /// 按条件得到单条实体
@@ -159,15 +141,14 @@ namespace Peigen.Repository
         /// <returns></returns>
         public T Get(Expression<Func<T, bool>> where)
         {
-            return dbset.Where(where).FirstOrDefault<T>();
+            throw new NotImplementedException();
         }
 
         public virtual IEnumerable<T> GetAllLazy()
         {
-            return dbset;
+            throw new NotImplementedException();
         }
 
-        #endregion
-
+        #endregion 
     }
 }

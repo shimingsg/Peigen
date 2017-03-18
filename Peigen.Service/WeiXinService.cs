@@ -29,9 +29,9 @@ namespace Peigen.Service
         public PublicNumberEntity Add(int id)
         {
             var entity = _publicNumberRepository.GetById(id);
-            var result = _publicNumberRepository.Add(entity);
+            _publicNumberRepository.Add(entity);
             _publicNumberRepository.Save();
-            return result;
+            return entity;
         }
 
         public PublicNumberEntity AddModel(PublicNumberEntity model)

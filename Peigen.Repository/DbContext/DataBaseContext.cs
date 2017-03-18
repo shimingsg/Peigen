@@ -1,4 +1,5 @@
-﻿using Peigen.Domain.Entities;
+﻿using Dapper.Contrib.Extensions;
+using Peigen.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -32,6 +33,30 @@ namespace Peigen.Repository
             var connection = new SqlConnection(connectionString);
             connection.Open();
             return connection;
+        }
+
+        /// <summary>
+        /// 获取entity type所对应的数据库表名称  entity内加[Table]
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static string GetTableName(Type type)
+        {
+            var tableattr = type.GetCustomAttributes(false).Where(attr => attr.GetType().Name == "TableAttribute").SingleOrDefault() as dynamic;
+            if (tableattr != null)
+                return tableattr.Name;
+            return type.Name;
+        }
+
+        /// <summary>
+        /// Init Dapper TableNameMapper
+        /// </summary>
+        public static void InitDapperTableNameMapper()
+        {
+            SqlMapperExtensions.TableNameMapper += new SqlMapperExtensions.TableNameMapperDelegate((Type type) =>
+            {
+                return GetTableName(type);
+            });
         }
     }
 }

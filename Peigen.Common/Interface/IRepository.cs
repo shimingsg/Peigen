@@ -12,7 +12,7 @@ namespace Peigen.Common.Interface
         void Save();
         void AsyncSave();
         //增
-        T Add(T entity);
+        void Add(T entity);
         void AddAll(IEnumerable<T> entities);
         //改
         void Update(T entity);

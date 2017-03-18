@@ -1,9 +1,11 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Peigen.Domain.Entities;
 using Peigen.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -11,12 +13,12 @@ using System.Web;
 using System.Web.Http;
 
 namespace Peigen.WebApi.Areas.Management.Controllers
-{    
+{
     public class WeiXinController : ApiController
     {
         private IWeiXinService weixinService;
         private IMemberService memberService;
-        public WeiXinController(IWeiXinService _weixinService,IMemberService _memberService)
+        public WeiXinController(IWeiXinService _weixinService, IMemberService _memberService)
         {
             weixinService = _weixinService;
             memberService = _memberService;
@@ -28,7 +30,7 @@ namespace Peigen.WebApi.Areas.Management.Controllers
         }
 
         [HttpPost]
-        public string GetSomething(int a,int b)
+        public string GetSomething(int a, int b)
         {
             //return "你很棒";
             //var a = 16;
@@ -39,17 +41,17 @@ namespace Peigen.WebApi.Areas.Management.Controllers
             MemberFactory.GetFactory().GetUserName();
             return "";
         }
-       
+
         public PublicNumberEntity GetById(int id)
         {
             return weixinService.GetById(id);
         }
 
-        public List<PublicNumberEntity> GetList(int type)
+        public HttpResponseMessage GetList(int type)
         {
-            return weixinService.GetMany(type);
+            return Request.CreateResponse(System.Net.HttpStatusCode.Accepted, JsonConvert.SerializeObject(weixinService.GetMany(type)));
         }
-
+        [HttpPost]
         public PublicNumberEntity Add(int id)
         {
             return weixinService.Add(id);
@@ -81,16 +83,17 @@ namespace Peigen.WebApi.Areas.Management.Controllers
         }
 
         [HttpPost]
-        public HttpResponseMessage PostMultipleParametersFromBody(string firstname, string lastname, int id,bool a)
+        public HttpResponseMessage PostMultipleParametersFromBody(string firstname, string lastname, int id, bool a)
         {
             return Request.CreateResponse(System.Net.HttpStatusCode.Accepted,
                 String.Format("{2}BindCustomCoPostMultipleParametersFromBodymplexType FristName = {0}, LastName = {1}.", firstname, lastname, id));
         }
 
-        [HttpPost]
-        public HttpResponseMessage PostComplex(string name,user model)
+        
+        [AcceptVerbs("post","get")]
+        public HttpResponseMessage DoThings(JObject obj)
         {
-            return Request.CreateResponse(System.Net.HttpStatusCode.Accepted, $"{name}{model.Id}");
+            return Request.CreateResponse(HttpStatusCode.OK, obj["name"]);
         }
     }
 }
