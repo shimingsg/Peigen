@@ -43,8 +43,22 @@
     <Compile Include="Interface\IRepository.cs" />
     <Compile Include="PagingResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="tem\Common.cs" />
+    <Compile Include="tem\CommonOracle.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="tem\MyBLL.cst" />
+    <None Include="tem\MyBLLBase.cst" />
+    <None Include="tem\MyDALFactory.cst" />
+    <None Include="tem\MyDALHelper.cst" />
+    <None Include="tem\MyIDAL.cst" />
+    <None Include="tem\MyIDALBase.cst" />
+    <None Include="tem\MyModelObject.cst" />
+    <None Include="tem\MyOracleDAL.cst" />
+    <None Include="tem\MySQLServerDAL.cst" />
+    <None Include="tem\MyTemplate.csp" />
+    <None Include="tem\MyTemplate.cst" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

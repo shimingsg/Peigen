@@ -1,0 +1,55 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" ResponseEncoding="UTF-8" Src="Common.cs" Inherits="Sainty.Common" Description="Great Entity Class - Model"%>
+<%@ Property Name="DevelopersName" Type="String" Category="Context" Default="Fan" Description="Author" %>
+<%@ Property Name="NameSpace" Type="String" Category="Context" Default="Sainty" Description="NameSpace" %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Context" Description="Table Name" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+//====================================================================
+// Sainty Fan @Copy Right 2010-2011
+// 源文件名: <%= GetClassName(SourceTable) %>.cs
+// 创建时间: <%=DateTime.Now.ToShortDateString() %>
+//====================================================================
+using System;
+
+namespace <%= NameSpace %>.Model
+{
+	/// <summary>
+	/// 业务实体类 - <%= GetClassName(SourceTable)%>
+	/// </summary>
+	[Serializable]
+	public partial class <%= GetClassName(SourceTable) %>
+	{
+		#region 构造函数
+		public <%= GetClassName(SourceTable) %>()
+		{
+		}
+		#endregion
+
+		#region 私有属性
+
+		<% foreach (ColumnSchema column in SourceTable.Columns) { %>
+		<%= GetMemberVariableDeclarationStatement("private", column) %>
+		<% } %>
+
+		#endregion
+		
+		#region 公开属性
+		
+		<% for (int i = 0; i < SourceTable.Columns.Count; i++) { %>
+		///<summary>
+		///<%=SourceTable.Columns[i].Description %>
+		///</summary>
+		public <%= GetCSharpVariableType(SourceTable.Columns[i]) %> <%= SourceTable.Columns[i].Name %>
+		{
+			get {return <%= GetMemberVariableName(SourceTable.Columns[i]) %>;}
+			set {<%= GetMemberVariableName(SourceTable.Columns[i]) %> = value;}
+		}
+		<% if (i < SourceTable.Columns.Count - 1) Response.Write("\r\n"); %>		
+		<% } %>
+
+		#endregion
+
+	}
+}

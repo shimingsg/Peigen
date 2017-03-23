@@ -29,23 +29,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Peigen.Domain", "Peigen.Dom
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Peigen.Service", "Peigen.Service\Peigen.Service.csproj", "{50723D84-D977-469F-855B-EA77FD3A8BF7}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Template2Sql", "Template2Sql", "{EE2B6045-C11F-491D-BF70-E3D891DE5700}"
-	ProjectSection(SolutionItems) = preProject
-		C:\Users\Administrator\Desktop\TemplateV2SQL\Common.cs = C:\Users\Administrator\Desktop\TemplateV2SQL\Common.cs
-		C:\Users\Administrator\Desktop\TemplateV2SQL\CommonOracle.cs = C:\Users\Administrator\Desktop\TemplateV2SQL\CommonOracle.cs
-		C:\Users\Administrator\Desktop\TemplateV2SQL\MyBLL.cst = C:\Users\Administrator\Desktop\TemplateV2SQL\MyBLL.cst
-		C:\Users\Administrator\Desktop\TemplateV2SQL\MyBLLBase.cst = C:\Users\Administrator\Desktop\TemplateV2SQL\MyBLLBase.cst
-		C:\Users\Administrator\Desktop\TemplateV2SQL\MyDALFactory.cst = C:\Users\Administrator\Desktop\TemplateV2SQL\MyDALFactory.cst
-		C:\Users\Administrator\Desktop\TemplateV2SQL\MyDALHelper.cst = C:\Users\Administrator\Desktop\TemplateV2SQL\MyDALHelper.cst
-		C:\Users\Administrator\Desktop\TemplateV2SQL\MyIDAL.cst = C:\Users\Administrator\Desktop\TemplateV2SQL\MyIDAL.cst
-		C:\Users\Administrator\Desktop\TemplateV2SQL\MyIDALBase.cst = C:\Users\Administrator\Desktop\TemplateV2SQL\MyIDALBase.cst
-		C:\Users\Administrator\Desktop\TemplateV2SQL\MyModelObject.cst = C:\Users\Administrator\Desktop\TemplateV2SQL\MyModelObject.cst
-		C:\Users\Administrator\Desktop\TemplateV2SQL\MyOracleDAL.cst = C:\Users\Administrator\Desktop\TemplateV2SQL\MyOracleDAL.cst
-		C:\Users\Administrator\Desktop\TemplateV2SQL\MySQLServerDAL.cst = C:\Users\Administrator\Desktop\TemplateV2SQL\MySQLServerDAL.cst
-		C:\Users\Administrator\Desktop\TemplateV2SQL\MyTemplate.csp = C:\Users\Administrator\Desktop\TemplateV2SQL\MyTemplate.csp
-		C:\Users\Administrator\Desktop\TemplateV2SQL\MyTemplate.cst = C:\Users\Administrator\Desktop\TemplateV2SQL\MyTemplate.cst
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +70,5 @@ Global
 		{3AF53051-12F5-43B9-B77F-12043B702E48} = {DFDB528F-A1C3-4662-B6BD-567A6218C466}
 		{B997F187-8E2B-44E6-AB77-D3024D63809F} = {1DBF519C-C0EF-455E-B54D-64C6BA56BC79}
 		{50723D84-D977-469F-855B-EA77FD3A8BF7} = {7B6955E4-0000-4F5E-A640-71F91B719C0A}
-		{EE2B6045-C11F-491D-BF70-E3D891DE5700} = {DFDB528F-A1C3-4662-B6BD-567A6218C466}
 	EndGlobalSection
 EndGlobal

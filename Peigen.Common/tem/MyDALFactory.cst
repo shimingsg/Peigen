@@ -1,0 +1,64 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" ResponseEncoding="UTF-8" Description="Great DALFactory Class - DALFactory" %>
+<%@ Property Name="NameSpace" Type="System.String" Default="" Category="Text" Description="Namespace" %>
+//====================================================================
+// Sainty Fan @Copy Right 2010-2011
+// 源文件名: DataAccess.cs
+// 创建时间: <%=DateTime.Now.ToShortDateString() %>
+//====================================================================
+using System;
+using System.Reflection;
+using System.Configuration;
+using System.Collections.Generic;
+using Transion.Web.Caching;
+using <%= NameSpace %>.IDAL;
+
+namespace <%= NameSpace %>.DALFactory
+{
+    /// <summary>
+    /// 抽象工厂模式创建DAL
+    /// </summary>
+    /// <typeparam name="T">实体泛型</typeparam>
+    public sealed class DataAccess<T>
+    {
+        private static readonly string path = System.Configuration.ConfigurationSettings.AppSettings["WebDAL"];
+        /// <summary>
+        /// 创建对象或从缓存获取
+        /// </summary>
+        public static object CreateObject(string path, string CacheKey)
+        {
+            object objType = DataCache.GetCache(CacheKey);//从缓存读取
+            if (objType == null)
+            {
+                try
+                {
+                    objType = Assembly.Load(path).CreateInstance(CacheKey);//反射创建
+                    DataCache.SetCache(CacheKey, objType);// 写入缓存
+                }
+                catch
+                { }
+            }
+            return objType;
+        }
+
+        /// <summary>
+        /// 根据配置文件生成一个传入的对象,并将其转为IDAL.IDAL泛型接口
+        /// </summary>
+        public static IDAL<T> GetIDAL(String Obj)
+        {
+            string CacheKey = path + "." + Obj;
+            object objType = CreateObject(path, CacheKey);
+            return (IDAL<T>)objType;
+        }
+
+        /// <summary>
+        /// 创建非IDAL接口的数据层接口
+        /// </summary>
+        public static T CreateDAL(String Obj)
+        {
+            string CacheKey = path + "." + Obj;
+            object objType = CreateObject(path, CacheKey);
+            return (T)objType;
+        }
+
+    }
+}

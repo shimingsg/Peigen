@@ -1,0 +1,367 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" ResponseEncoding="UTF-8" Src="CommonOracle.cs" Inherits="Transion.Common" Description="Great DataAccess Class - BLL" %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Context" Description="Table Name" %>
+<%@ Property Name="NameSpace" Type="System.String" Default="" Category="Text" Description="Namespace" %>
+<%@ Property Name="Prefix" Type="System.String" Default="tra_" Category="Text" Description="Store Procedure Name Prefix." %>
+<%@ Property Name="DBName" Type="System.String" Default="" Category="Text" Description="Database Name" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Text" %>
+//====================================================================
+// Sainty Fan @Copy Right 2010-2011
+// 源文件名: <%= GetClassName(SourceTable) %>.cs
+// 创建时间: <%=DateTime.Now.ToShortDateString() %>
+// 使用说明: 请勿直接修改此文件，如需扩展请建立 partial class 进行
+//====================================================================
+using System;
+using System.Text;
+using System.Data;
+using System.Data.SqlClient;
+using System.Collections;
+using System.Collections.Generic;
+using <%= NameSpace %>.Data.Common;
+using <%= NameSpace %>.IDAL;
+
+namespace <%= NameSpace %>.SQLServerDAL
+{
+    /// <summary>
+    /// SQLServer数据访问类 - <%= SourceTable %>
+    /// </summary>
+    public partial class <%= GetClassName(SourceTable) %> : I<%= GetClassName(SourceTable) %>
+    {
+		#region 构造函数
+		/// <summary>
+		/// Default Constructor
+		/// </summary>
+		public <%= GetClassName(SourceTable) %>()
+		{
+		}
+		#endregion
+
+		#region 实现接口
+		
+		/// <summary>
+        /// 增加一条数据
+        /// </summary>
+        public int Add(<%= NameSpace %>.Model.<%= GetClassName(SourceTable) %> model)
+        {
+            StringBuilder sql1 = new StringBuilder("insert into [<%= GetClassName(SourceTable) %>](");
+			StringBuilder sql2 = new StringBuilder(" values(");
+			List<SqlParameter> parameters = new List<SqlParameter>();
+			
+			<% 
+			for (int i = 0; i < GetInsertColumn(SourceTable).Count; i++) { 
+				string columnName = GetInsertColumn(SourceTable)[i].Name;
+				string strDataType = GetCSharpVariableType(GetInsertColumn(SourceTable)[i]);
+			%>
+			<%=GetSqlParameterCondition(GetInsertColumn(SourceTable)[i])%>
+				<%if(i != 0) {%>
+				sql1.Append(",[<%=columnName%>]");	
+				<%} else {%>
+				sql1.Append("[<%=columnName%>]");	
+				<%}%>
+				<%if(i != 0) {%>
+				sql2.Append(",@<%=columnName%>");	
+				<%} else {%>
+				sql2.Append("@<%=columnName%>");	
+				<%}%>
+				SqlParameter parameter<%=columnName%> = new SqlParameter("@<%=columnName %>",SqlDbType.<%=GetSqlDbType(GetInsertColumn(SourceTable)[i])%><% if ((GetSqlDbType(GetInsertColumn(SourceTable)[i]) == "VarChar")||(GetSqlDbType(GetInsertColumn(SourceTable)[i]) == "NVarChar"))%><%{%>,<%=GetInsertColumn(SourceTable)[i].Size%><%}%>);
+				parameter<%=columnName%>.Value=model.<%=columnName%>;
+				parameters.Add(parameter<%=columnName%>);
+			<%=GetSqlParameterConditionEnd(GetInsertColumn(SourceTable)[i])%>
+			<%}%>
+
+			<%if ((bool)SourceTable.PrimaryKey.MemberColumns[0].ExtendedProperties["CS_IsIdentity"].Value) {%>
+			sql2.Append(");select @@Identity");
+			sql1.Append(")").Append(sql2.ToString());
+			return DbHelperSQL.GetInt(DbHelperSQL.GetSingle(sql1.ToString(), parameters.ToArray()));
+			<%} else {%>
+			sql2.Append(")");
+			sql1.Append(")").Append(sql2.ToString());
+            return DbHelperSQL.ExecuteSql(sql1.ToString(), parameters.ToArray());
+			<%}%>
+
+        }
+
+        /// <summary>
+        /// 更新一条数据
+        /// </summary>
+        public bool Update(<%= NameSpace %>.Model.<%= GetClassName(SourceTable) %> model)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("update [<%= GetClassName(SourceTable) %>] set ");
+            <% for (int i = 0; i < SourceTable.NonPrimaryKeyColumns.Count; i++) { %>strSql.Append("[<%= SourceTable.NonPrimaryKeyColumns[i].Name %>] = @<%= SourceTable.NonPrimaryKeyColumns[i].Name %><% if (i < SourceTable.NonPrimaryKeyColumns.Count - 1) { %>,");
+			<% } %><% else %><%{%>"<%}%><% } %>);
+            strSql.Append(" where [<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>]=@<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>");
+            SqlParameter[] parameters = {
+			<% for (int i = 0; i < SourceTable.Columns.Count; i++) { %>
+				new SqlParameter("@<%=SourceTable.Columns[i].Name %>",SqlDbType.<%=GetSqlDbType(SourceTable.Columns[i])%><% if ((GetSqlDbType(SourceTable.Columns[i]) == "VarChar")||(GetSqlDbType(SourceTable.Columns[i]) == "NVarChar"))%><%{%>,<%=SourceTable.Columns[i].Size%><%}%>)<% if (i!=SourceTable.Columns.Count-1)%><%{%>,<%}%>
+			<% } %>
+			};
+
+			<% for (int i = 0; i < SourceTable.Columns.Count; i++) { %>
+			<% if ((SourceTable.Columns[i].AllowDBNull ) && (GetCSharpVariableType(SourceTable.Columns[i]) == "string")) { %>
+			if (model.<%=SourceTable.Columns[i].Name %> != null)
+                parameters[<%= i %>].Value = model.<%=SourceTable.Columns[i].Name %>;
+            else
+                parameters[<%= i %>].Value = DBNull.Value;
+				
+			<%} else if ((GetDefaultValue(SourceTable.Columns[i])=="" ) && (GetCSharpVariableType(SourceTable.Columns[i]) == "DateTime")) {%>
+			if (model.<%=SourceTable.Columns[i].Name %> != DateTime.MinValue)
+                parameters[<%= i %>].Value = model.<%=SourceTable.Columns[i].Name %>;
+            else
+                parameters[<%= i %>].Value = DBNull.Value;
+				
+			<%} else {%>
+			parameters[<%= i %>].Value = model.<%=SourceTable.Columns[i].Name %>;
+			<% } %>
+			<% } %>
+
+            return DbHelperSQL.ExecuteSql(strSql.ToString(), parameters) > 0;
+        }
+        
+        /// <summary>
+        /// 更新某一个字段的数据
+        /// </summary>
+        public bool UpdateFieldValue(int _fieldID, string _fieldName, object _fieldValue)
+        {
+
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("update [<%= GetClassName(SourceTable) %>] set ");
+            strSql.Append("[" + _fieldName + "] = @V_FValue");
+            strSql.Append(" where [<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>] = @V_FunID");
+            SqlParameter[] parameters = null;
+            switch (_fieldValue.GetType().ToString())
+            {
+                case "System.DateTime":
+                    parameters = new SqlParameter[] { 
+                        new SqlParameter("@V_FunID",SqlDbType.Int),
+				        new SqlParameter("@V_FValue",SqlDbType.DateTime)                        
+                    };
+                    break;
+                case "System.Int32":
+                    parameters = new SqlParameter[] { 
+                        new SqlParameter("@V_FunID",SqlDbType.Int),
+				        new SqlParameter("@V_FValue",SqlDbType.Int)                        
+                    };
+                    break;
+                case "System.String":
+                    parameters = new SqlParameter[] { 
+                        new SqlParameter("@V_FunID",SqlDbType.Int),
+				        new SqlParameter("@V_FValue",SqlDbType.VarChar,500)                        
+                    };
+                    break;
+                case "System.Double":
+                    parameters = new SqlParameter[] { 
+                        new SqlParameter("@V_FunID",SqlDbType.Int),
+				        new SqlParameter("@V_FValue",SqlDbType.Float)                        
+                    };
+                    break;
+                default:
+                    parameters = new SqlParameter[] { 
+                        new SqlParameter("@V_FunID",SqlDbType.Int),
+				        new SqlParameter("@V_FValue",SqlDbType.VarChar,500)                        
+                    };
+                    break;
+            }
+            parameters[0].Value = _fieldID;
+            if (_fieldValue != null)
+                parameters[1].Value = _fieldValue;
+            else
+                parameters[1].Value = DBNull.Value;
+            return DbHelperSQL.ExecuteSql(strSql.ToString(), parameters) > 0;
+        }
+        
+        /// <summary>
+        /// 删除一条数据
+        /// </summary>
+        public bool Delete(<%= GetCSharpVariableType(SourceTable.PrimaryKey.MemberColumns[0])%> <%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[0].Name) %>)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("delete [<%= GetClassName(SourceTable) %>] ");
+            strSql.Append(" where [<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>]=@<%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[0].Name) %>");
+            SqlParameter[] parameters = {
+                    new SqlParameter("@<%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[0].Name) %>", SqlDbType.<%=GetSqlDbType(SourceTable.PrimaryKey.MemberColumns[0])%><% if ((GetSqlDbType(SourceTable.PrimaryKey.MemberColumns[0]) == "VarChar")||(GetSqlDbType(SourceTable.PrimaryKey.MemberColumns[0]) == "NVarChar"))%><%{%>,<%=SourceTable.PrimaryKey.MemberColumns[0].Size%><%}%>)};
+            parameters[0].Value = <%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[0].Name) %>;
+
+            return DbHelperSQL.ExecuteSql(strSql.ToString(), parameters) > 0;
+        }
+
+        /// <summary>
+        /// 得到最大ID
+        /// </summary>
+        public int GetMaxId()
+        {
+            return DbHelperSQL.GetMaxID("[<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>]", "[<%= GetClassName(SourceTable) %>]");
+        }
+
+        /// <summary>
+        /// 是否存在该记录
+        /// </summary>
+        public bool Exists(<%= GetCSharpVariableType(SourceTable.PrimaryKey.MemberColumns[0])%> <%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[0].Name) %>)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select count(1) from [<%= GetClassName(SourceTable) %>]");
+            strSql.Append(" where [<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>]= @<%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[0].Name) %>");
+            SqlParameter[] parameters = {
+                    new SqlParameter("@<%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[0].Name) %>", SqlDbType.<%=GetSqlDbType(SourceTable.PrimaryKey.MemberColumns[0])%><% if ((GetSqlDbType(SourceTable.PrimaryKey.MemberColumns[0]) == "VarChar")||(GetSqlDbType(SourceTable.PrimaryKey.MemberColumns[0]) == "NVarChar"))%><%{%>,<%=SourceTable.PrimaryKey.MemberColumns[0].Size%><%}%>)};
+            parameters[0].Value = <%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[0].Name) %>;
+            return DbHelperSQL.Exists(strSql.ToString(), parameters);
+        }
+
+        /// <summary>
+        /// 得到一个对象实体
+        /// </summary>
+        public <%= NameSpace %>.Model.<%= GetClassName(SourceTable) %> GetModel(<%= GetCSharpVariableType(SourceTable.PrimaryKey.MemberColumns[0])%> <%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[0].Name) %>)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select * from [<%= GetClassName(SourceTable) %>] ");
+            strSql.Append(" where [<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>]=@<%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[0].Name) %>");
+            SqlParameter[] parameters = {
+                    new SqlParameter("@<%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[0].Name) %>", SqlDbType.<%=GetSqlDbType(SourceTable.PrimaryKey.MemberColumns[0])%><% if ((GetSqlDbType(SourceTable.PrimaryKey.MemberColumns[0]) == "VarChar")||(GetSqlDbType(SourceTable.PrimaryKey.MemberColumns[0]) == "NVarChar"))%><%{%>,<%=SourceTable.PrimaryKey.MemberColumns[0].Size%><%}%>)};
+            parameters[0].Value = <%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[0].Name) %>;
+            DataSet ds = DbHelperSQL.Query(strSql.ToString(), parameters);
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                DataRow r = ds.Tables[0].Rows[0];
+                return GetModel(r);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+		<%if (SourceTable.PrimaryKey.MemberColumns[0].DataType !=DbType.Int32) {%>
+		#region 实现int接口
+
+		/// <summary>
+        /// 删除一条数据
+        /// </summary>
+        public bool Delete(int fieldID)
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// 是否存在该记录
+        /// </summary>
+        public bool Exists(int fieldID)
+        {
+            return false;
+        }
+
+		/// <summary>
+        /// 得到一个对象实体
+        /// </summary>
+        public <%= NameSpace %>.Model.<%= GetClassName(SourceTable) %> GetModel(int fieldID)
+        {
+            return null;
+        }
+
+		#endregion
+		<%}%>
+
+        /// <summary>
+        /// 获取数据集,建议只在多表联查时使用
+        /// </summary>
+        public DataSet GetDataSet(string strSql)
+        {
+            return DbHelperSQL.Query(strSql);
+        }
+
+        /// <summary>
+        /// 获取数据集,在单表查询时使用
+        /// </summary>
+        public DataSet GetDataSet(string strWhat, string strWhere, string strOrderby)
+        {
+            if (string.IsNullOrEmpty(strWhat))
+                strWhat = "*";
+            StringBuilder strSql = new StringBuilder("select " + strWhat + " from [<%= GetClassName(SourceTable) %>]");
+            if (!string.IsNullOrEmpty(strWhere))
+                strSql.Append(" where " + strWhere);
+            if (!string.IsNullOrEmpty(strOrderby))
+                strSql.Append(" order by " + strOrderby);
+            return DbHelperSQL.Query(strSql.ToString());
+        }
+
+        /// <summary>
+        /// 获取泛型数据列表,建议只在多表联查时使用
+        /// </summary>
+        public IList<<%= NameSpace %>.Model.<%= GetClassName(SourceTable) %>> GetList(string strSql)
+        {
+            return GetList(GetDataSet(strSql));
+        }
+
+        /// <summary>
+        /// 获取泛型数据列表,在单表查询时使用
+        /// </summary>
+        public IList<<%= NameSpace %>.Model.<%= GetClassName(SourceTable) %>> GetList(string strWhat, string strWhere, string strOrderby)
+        {
+            return GetList(GetDataSet(strWhat, strWhere, strOrderby));
+        }
+
+        /// <summary>
+        /// 分页获取泛型数据列表
+        /// </summary>
+        public IList<<%= NameSpace %>.Model.<%= GetClassName(SourceTable) %>> GetList(int pageSize, int pageIndex, string fldSort, bool sort, string strCondition, out int pageCount, out int count)
+        {
+            string strSql;
+            DataSet ds = DbHelperSQL.PageList("[<%= GetClassName(SourceTable) %>]", null, pageSize, pageIndex, fldSort, sort, strCondition, "[<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>]", false, out pageCount, out count, out strSql);
+            return GetList(ds);
+        }
+
+        /// <summary>
+        /// 获得分页数据列表
+        /// </summary>
+        public IList<<%= NameSpace %>.Model.<%= GetClassName(SourceTable) %>> GetList(string fieldNames, string orderColumn, bool isDesc, string strCondition, int currentPage, int pageSize, int rowsCount)
+        {
+            DataSet ds = DbHelperSQL.GetPageList("[<%= GetClassName(SourceTable) %>]", fieldNames, orderColumn, isDesc, strCondition, "[<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>]", currentPage, pageSize, rowsCount);
+            return GetList(ds);
+       }
+		
+		#endregion
+			
+		#region 私有方法
+
+        /// <summary>
+        /// 由一行数据得到一个实体
+        /// </summary>
+        private <%= NameSpace %>.Model.<%= GetClassName(SourceTable) %> GetModel(DataRow r)
+        {
+            <%= NameSpace %>.Model.<%= GetClassName(SourceTable) %> model = new <%= NameSpace %>.Model.<%= GetClassName(SourceTable) %>();
+
+			if(r!=null)
+			{
+				<% for (int i = 0; i < SourceTable.Columns.Count; i++) { %>
+				<% string currStr ="r[\""+SourceTable.Columns[i].Name+"\"]";%>
+				model.<%= SourceTable.Columns[i].Name %> = DbHelperSQL.<%= GetReaderMethod(SourceTable.Columns[i])%>(<%=currStr%>);
+				<% } %>
+			}
+			else
+			{
+				return null;
+			}
+
+            return model;
+        }
+
+        /// <summary>
+        /// 由数据集得到泛型数据列表
+        /// </summary>
+        private IList<<%= NameSpace %>.Model.<%= GetClassName(SourceTable) %>> GetList(DataSet ds)
+        {
+            List<<%= NameSpace %>.Model.<%= GetClassName(SourceTable) %>> l = new List<<%= NameSpace %>.Model.<%= GetClassName(SourceTable) %>>();
+            foreach (DataRow r in ds.Tables[0].Rows)
+            {
+                l.Add(GetModel(r));
+            }
+            return l;
+        }
+        
+		#endregion
+
+    }
+}

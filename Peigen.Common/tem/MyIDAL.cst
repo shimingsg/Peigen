@@ -1,0 +1,50 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" ResponseEncoding="UTF-8" Src="CommonOracle.cs" Inherits="Transion.Common" Description="Great Interface Class - IDAL" %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Context" Description="Table Name" %>
+<%@ Property Name="NameSpace" Type="System.String" Default="" Category="Text" Description="Namespace" %>
+<%@ Property Name="DBName" Type="System.String" Default="" Category="Text" Description="Database Name" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Text" %>
+//====================================================================
+// Sainty Fan @Copy Right 2010-2011
+// 源文件名:  I<%= GetClassName(SourceTable) %>.cs
+// 创建时间: <%=DateTime.Now.ToShortDateString() %>
+//====================================================================
+using System;
+using System.Data;
+using System.Collections;
+using System.Collections.Generic;
+
+namespace <%= NameSpace %>.IDAL
+{
+    /// <summary>
+    /// 数据访问层接口 - I<%= GetClassName(SourceTable) %>
+    /// </summary>
+    public partial interface I<%= GetClassName(SourceTable) %> : IDAL<<%= NameSpace %>.Model.<%= GetClassName(SourceTable) %>>
+    {
+		<%if (SourceTable.PrimaryKey.MemberColumns[0].DataType !=DbType.Int32) {%>
+        #region 实现本类型接口
+
+		/// <summary>
+        /// 删除一条数据
+        /// </summary>
+        bool Delete(<%= GetCSharpVariableType(SourceTable.PrimaryKey.MemberColumns[0])%> <%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[0].Name) %>);
+
+        /// <summary>
+        /// 是否存在该记录
+        /// </summary>
+        bool Exists(<%= GetCSharpVariableType(SourceTable.PrimaryKey.MemberColumns[0])%> <%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[0].Name) %>);
+
+        /// <summary>
+        /// 得到一个对象实体
+        /// </summary>
+        <%= NameSpace %>.Model.<%= GetClassName(SourceTable) %> GetModel(<%= GetCSharpVariableType(SourceTable.PrimaryKey.MemberColumns[0])%> <%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[0].Name) %>);
+
+        #endregion
+		<%}%>
+
+    }
+}

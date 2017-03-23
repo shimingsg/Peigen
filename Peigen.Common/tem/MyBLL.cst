@@ -1,0 +1,76 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" ResponseEncoding="UTF-8" Src="Common.cs" Inherits="Sainty.Common" Description="Great BusinessLogic Class - BLL" %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Context" Description="Table Name" %>
+<%@ Property Name="NameSpace" Type="System.String" Default="" Category="Text" Description="Namespace" %>
+<%@ Property Name="DBName" Type="System.String" Default="" Category="Text" Description="Database Name" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Text" %>
+//====================================================================
+// Sainty Fan @Copy Right 2010-2011
+// 源文件名: <%= GetClassName(SourceTable) %>.cs
+// 创建时间: <%=DateTime.Now.ToShortDateString() %>
+//====================================================================
+using System;
+using System.Data;
+using System.Collections.Generic;
+using <%= NameSpace %>.IDAL;
+using <%= NameSpace %>.DALFactory;
+
+namespace <%= NameSpace %>.BLL
+{
+    /// <summary>
+    /// 业务逻辑类 - <%= GetClassName(SourceTable) %>
+    /// </summary>
+	public partial class <%= GetClassName(SourceTable) %> : BLL<<%= NameSpace %>.Model.<%= GetClassName(SourceTable) %>>
+    {
+        private new readonly I<%= GetClassName(SourceTable) %> dal = (I<%= GetClassName(SourceTable) %>)DataAccess<<%= NameSpace %>.Model.<%= GetClassName(SourceTable) %>>.GetIDAL("<%= GetClassName(SourceTable) %>");
+        public <%= GetClassName(SourceTable) %>()
+        {
+            base.dal = dal;
+        }
+
+		<%if (SourceTable.PrimaryKey.MemberColumns[0].DataType !=DbType.Int32) {%>
+        #region 实现本类型接口
+
+        /// <summary>
+        /// 删除一条数据
+        /// </summary>
+        public bool Delete(<%= GetCSharpVariableType(SourceTable.PrimaryKey.MemberColumns[0])%> <%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[0].Name) %>)
+        {
+            return dal.Delete(<%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[0].Name) %>);
+        }
+
+        /// <summary>
+        /// 删除多条数据
+        /// </summary>
+        public void Delete(List<<%= GetCSharpVariableType(SourceTable.PrimaryKey.MemberColumns[0])%>> l)
+        {
+            foreach (<%= GetCSharpVariableType(SourceTable.PrimaryKey.MemberColumns[0])%> <%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[0].Name) %> in l)
+                dal.Delete(<%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[0].Name) %>);
+        }
+
+        /// <summary>
+        /// 是否存在该记录
+        /// </summary>
+        public bool Exists(<%= GetCSharpVariableType(SourceTable.PrimaryKey.MemberColumns[0])%> <%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[0].Name) %>)
+        {
+            return dal.Exists(<%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[0].Name) %>);
+        }
+
+        /// <summary>
+        /// 得到一个对象实体
+        /// </summary>
+        public <%= NameSpace %>.Model.<%= GetClassName(SourceTable) %> GetModel(<%= GetCSharpVariableType(SourceTable.PrimaryKey.MemberColumns[0])%> <%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[0].Name) %>)
+        {
+            return dal.GetModel(<%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[0].Name) %>);
+        }
+
+        #endregion
+		<%}%>
+
+    }
+
+}

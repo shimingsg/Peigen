@@ -1,0 +1,208 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" ResponseEncoding="UTF-8" Description="Great DALFactory Class - DALFactory" %>
+<%@ Property Name="NameSpace" Type="System.String" Default="" Category="Text" Description="Namespace" %>
+//====================================================================
+// Sainty Fan @Copy Right 2010-2011
+// 源文件名: BLLBase.cs
+// 创建时间: <%=DateTime.Now.ToShortDateString() %>
+//====================================================================
+using System;
+using System.Data;
+using System.Data.Common;
+using System.Collections.Generic;
+
+namespace <%= NameSpace %>.BLL
+{
+	/// <summary>
+	/// 通用业务逻辑类
+	/// </summary>
+	/// <typeparam name="T">实体泛型</typeparam>
+	public class BLL<T>
+	{
+		protected <%= NameSpace %>.IDAL.IDAL<T> dal;
+
+		/// <summary>
+		/// 增加一条数据
+		/// </summary>
+		public int Add(T model)
+		{
+			return dal.Add(model);
+		}
+
+		/// <summary>
+		/// 增加多条数据
+		/// </summary>
+		public void Add(List<T> l)
+		{
+			foreach (T model in l)
+				dal.Add(model);
+		}
+
+		/// <summary>
+		/// 更新一条数据
+		/// </summary>
+		public bool Update(T model)
+		{
+			return dal.Update(model);
+		}
+
+		/// <summary>
+		/// 更新多条数据
+		/// </summary>
+		public void Update(List<T> l)
+		{
+			foreach (T model in l)
+				dal.Update(model);
+		}
+
+		/// <summary>
+		/// 删除一条数据
+		/// </summary>
+		public bool Delete(int fieldID)
+		{
+			return dal.Delete(fieldID);
+		}
+
+		/// <summary>
+		/// 删除多条数据
+		/// </summary>
+		public void Delete(List<int> l)
+		{
+			foreach (int fieldID in l)
+				dal.Delete(fieldID);
+		}
+
+		/// <summary>
+		/// 得到最大ID
+		///</summary>
+		public int GetMaxId()
+		{
+			return dal.GetMaxId();
+		}
+
+		/// <summary>
+		/// 是否存在该记录
+		/// </summary>
+		public bool Exists(int fieldID)
+		{
+			return dal.Exists(fieldID);
+		}
+
+		/// <summary>
+		/// 得到一个对象实体
+		/// </summary>
+		public T GetModel(int fieldID)
+		{
+			return dal.GetModel(fieldID);
+		}
+
+		/// <summary>
+		/// 得到数据总条数
+		/// </summary>
+		public int GetCount()
+		{
+			return dal.GetCount("");
+		}
+
+		/// <summary>
+		/// 得到带条件数据总条数
+		/// </summary>
+		public int GetCount(string strWhere)
+		{
+			return dal.GetCount(strWhere);
+		}
+
+		/// <summary>
+		/// 获取泛型数据列表,建议只在多表联查时使用
+		/// </summary>
+		public List<T> GetList(string strSql)
+		{
+			return dal.GetList(strSql) as List<T>;
+		}
+
+		/// <summary>
+		/// 获得泛型数据列表,不建议直接使用此方法,请根据业务逻辑重写
+		/// </summary>
+		public List<T> GetList(string strWhat, string strWhere, string strOrderby)
+		{
+			return dal.GetList(strWhat, strWhere, strOrderby) as List<T>;
+		}
+
+		/// <summary>
+		/// 获得分页数据列表
+		/// </summary>
+		/// <param name="fldSort">排序字段，例如：id asc或简写id，可写多个字段（如果是可重复字段建议最后带上主键，例如name desc,id）</param>
+		/// <param name="condition">条件</param>
+		/// <param name="pageSize">每页显示条数</param>
+		/// <param name="pageIndex">第几页</param>
+		public List<T> GetList(string fldSort, string condition, int pageIndex, int pageSize)
+		{
+			if (pageSize <= 0)
+				throw new Exception("每页数据条数必须大于0。");
+
+			if (pageIndex <= 0)
+				throw new Exception("页索引必须大于0。");
+
+			//count = dal.GetCount(condition);
+			//pageCount = GetPageCount(pageSize, count);
+
+			int first = GetFirstIndex(pageSize, pageIndex);
+			int last = GetLastIndex(pageSize, pageIndex);
+
+			return dal.GetList(fldSort, condition, first, last) as List<T>;
+		}
+
+		/// <summary>
+		/// 获得条件查询的DataTable
+		/// </summary>
+		public DataTable GetDataTable(string strSql)
+		{
+            return dal.GetDataTable(strSql);
+		}
+
+		/// <summary>
+		/// 获得条件查询的DataTable
+		/// </summary>
+		public DataTable GetDataTable(string strWhat, string strWhere, string strOrderby)
+		{
+            return dal.GetDataTable(strWhat, strWhere, strOrderby);
+		}
+
+		#region 分页
+		/// <summary>
+		/// 取得分页数据的第一个索引
+		/// </summary>
+		/// <param name="pageSize">页大小</param>
+		/// <param name="pageIndex">页索引</param>
+		/// <returns>分页数据的第一个索引</returns>
+		protected static int GetFirstIndex(int pageSize, int pageIndex)
+		{
+			return pageSize * (pageIndex - 1) + 1;
+		}
+
+		/// <summary>
+		/// 取得分页数据的最后一个索引
+		/// </summary>
+		/// <param name="pageSize">页大小</param>
+		/// <param name="pageIndex">页索引</param>
+		/// <returns>分页数据的最后一个索引</returns>
+		protected static int GetLastIndex(int pageSize, int pageIndex)
+		{
+			return pageSize * pageIndex;
+		}
+
+		/// <summary>
+		/// 获取分页的总页数
+		/// </summary>
+		/// <param name="pageSize">页大小</param>
+		/// <param name="count">数据条数</param>
+		/// <returns>分页的总页数</returns>
+		protected int GetPageCount(int pageSize, int count)
+		{
+			if (count % pageSize == 0)
+				return count / pageSize;
+			else
+				return count / pageSize + 1;
+		}
+		#endregion
+	}
+}

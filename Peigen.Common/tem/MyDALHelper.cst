@@ -1,0 +1,104 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" ResponseEncoding="UTF-8" Description="Great DALFactory Class - DALFactory" %>
+<%@ Property Name="NameSpace" Type="System.String" Default="" Category="Text" Description="Namespace" %>
+//====================================================================
+// Transion Group @Copy Right 2008-2010
+// 源文件名: DALHelper.cs
+// 创建时间: <%=DateTime.Now.ToShortDateString() %>
+//====================================================================
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Configuration;
+using System.Collections;
+using System.IO;
+using System.Web;
+using Transion.Data.Helper;
+using System.Data;
+
+namespace Cun.Shop.OracleDAL
+{
+    public class DALHelper
+    {
+        protected static DBHelper DbHelper = GetHelper("Cnlife_Shop");
+
+        /// <summary>
+        /// 从Web.config从读取数据库的连接以及数据库类型
+        /// </summary>
+        private static DBHelper GetHelper(string connectionStringName)
+        {
+            DBHelper dbHelper = new DBHelper();
+
+            // 从Web.config中读取数据库类型
+            string providerName = System.Configuration.ConfigurationManager.ConnectionStrings[connectionStringName].ProviderName;
+            switch (providerName)
+            {
+                case "System.Data.OracleClient":
+                    dbHelper.DatabaseType = DBHelper.DatabaseTypes.Oracle;
+                    break;
+                case "MySql.Data.MySqlClient":
+                    dbHelper.DatabaseType = DBHelper.DatabaseTypes.MySql;
+                    break;
+                case "System.Data.OleDb":
+                    dbHelper.DatabaseType = DBHelper.DatabaseTypes.OleDb;
+                    break;
+                case "System.Data.SqlClient":
+                default:
+                    dbHelper.DatabaseType = DBHelper.DatabaseTypes.Sql;
+                    break;
+            }
+
+            // 从Web.config中读取数据库连接
+            switch (dbHelper.DatabaseType)
+            {
+                case DBHelper.DatabaseTypes.OleDb:
+                    dbHelper.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Persist Security Info=true;Data Source="
+                        + HttpContext.Current.Request.PhysicalApplicationPath
+                        + System.Configuration.ConfigurationManager.ConnectionStrings[connectionStringName].ConnectionString;
+                    break;
+                default:
+                    dbHelper.ConnectionString = ConfigurationManager.ConnectionStrings[connectionStringName].ConnectionString;
+                    break;
+            }
+
+            return dbHelper;
+        }
+
+
+        /// <summary>
+        /// 获取数据集,建议只在多表联查时使用
+        /// </summary>
+        public DataTable GetDataTable(string strSql)
+        {
+            //使用DataSet的方法 可做性能对比
+            //return DbHelper.ExecuteQuery(CommandType.Text, strSql, null).Tables[0];
+
+            //如果关闭连接没有问题，使用DataReader是性能最好的方法
+            return DbHelper.ExecuteDataTable(strSql);
+        }
+
+        /// <summary>
+        /// 获取数据集,在单表查询时使用
+        /// </summary>
+        public DataTable GetDataTable(string strWhat, string strWhere, string strOrderby, string tblName)
+        {
+            if (string.IsNullOrEmpty(strWhat))
+                strWhat = "*";
+            StringBuilder strSql = new StringBuilder("SELECT ");
+            strSql.Append(strWhat);
+            strSql.Append(" FROM ");
+            strSql.Append(tblName);
+            if (!string.IsNullOrEmpty(strWhere))
+            {
+                strSql.Append(" WHERE ");
+                strSql.Append(strWhere);
+            }
+            if (!string.IsNullOrEmpty(strOrderby))
+            {
+                strSql.Append(" ORDER BY ");
+                strSql.Append(strOrderby);
+            }
+            return DbHelper.ExecuteDataTable(strSql.ToString());
+        }
+    }
+}
+
