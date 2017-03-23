@@ -10,6 +10,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.WebApi", "1.WebApi", "{7D34A12A-0C31-4459-A068-9C9B17252469}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "7.UnitTests", "7.UnitTests", "{E2736FBE-E35D-497A-86CE-9CFB9CA89399}"
+	ProjectSection(SolutionItems) = preProject
+		C:\Users\Administrator\Desktop\TemplateV2SQL.rar = C:\Users\Administrator\Desktop\TemplateV2SQL.rar
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.Infrastructures", "3.Infrastructures", "{6528F7E5-BBA4-4ED8-BA61-821BBB155232}"
 EndProject
