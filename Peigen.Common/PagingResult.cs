@@ -11,7 +11,7 @@ namespace Peigen.Common
         /// <summary>
         /// 当前页索引
         /// </summary>
-        public int PageIndex { get; set; }
+        public int PageIndex { get; set; } 
         /// <summary>
         /// 每页大小
         /// </summary>
