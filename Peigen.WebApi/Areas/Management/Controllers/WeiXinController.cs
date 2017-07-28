@@ -1,7 +1,10 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Peigen.Common;
 using Peigen.Domain.Entities;
 using Peigen.Service;
+using Peigen.WebApi.Areas.Management.Model.Rsp;
+using Peigen.WebApi.Common.IOModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -110,6 +113,36 @@ namespace Peigen.WebApi.Areas.Management.Controllers
         {
             return Request.CreateResponse(HttpStatusCode.OK, "11111");
 
+        }
+
+        [HttpPost]
+        public UserRsp GetUserRsp()
+        {
+            var result = new UserRsp();
+            result.Id = 1;
+            result.Name = "peigen";
+            return new UserRsp(new MethodResultFull<UserRsp>(ModuleCodeEnum.Core_Area, 1));
+            //return result;
+        }
+
+        [HttpPost]
+        public PagingRsp<UserRsp> GetUserRspList()
+        {            
+            var list = new List<user>();
+            list.Add(new user
+            {
+                Id = 1,
+                Name = "培根"
+            });
+            var data = new MethodResultFull<List<user>>();
+            data.Content = list;
+            var result = new PagingRsp<UserRsp>(data);
+            result.Data = data.Content.Select(x => new UserRsp
+            {
+                Id=x.Id,
+                Name=x.Name
+            }).ToList();
+            return result;
         }
     }
 }

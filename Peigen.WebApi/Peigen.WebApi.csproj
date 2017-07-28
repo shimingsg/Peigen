@@ -171,6 +171,7 @@
     <Compile Include="AreaRegistation\AreaName.cs" />
     <Compile Include="Areas\Management\Controllers\WeiXinController.cs" />
     <Compile Include="Areas\Management\ManagementAreasRegistration.cs" />
+    <Compile Include="Areas\Management\Model\Rsp\UserRsp.cs" />
     <Compile Include="Common\APIValueProvider.cs" />
     <Compile Include="Common\APIValueProviderFactory.cs" />
     <Compile Include="Common\Core\CustomParameterBinding.cs" />
@@ -179,6 +180,7 @@
     <Compile Include="Common\Core\PrincipalParameterBinding.cs" />
     <Compile Include="Common\IOModel\BaseModelReq.cs" />
     <Compile Include="Common\IOModel\BaseModelRsp.cs" />
+    <Compile Include="Common\IOModel\ErrorMessageModel.cs" />
     <Compile Include="Common\IOModel\PagingReq.cs" />
     <Compile Include="Common\IOModel\PagingRsp.cs" />
     <Compile Include="Common\JsonValueProviderResult.cs" />
@@ -205,7 +207,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\Management\Model\" />
+    <Folder Include="Areas\Management\Model\Req\" />
     <Folder Include="Areas\Management\Views\" />
     <Folder Include="Areas\Mweb\" />
     <Folder Include="Controllers\" />

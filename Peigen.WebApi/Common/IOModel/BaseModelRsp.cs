@@ -10,9 +10,10 @@ namespace Peigen.WebApi.Common.IOModel
 {
     public class BaseModelRsp
     {
-        private string _resultNo;
-        private MethodResultBase methodResultBase;
-
+        /// <summary>
+        /// 返回状态
+        /// </summary>
+        private string _resultNo;        
         public string ResultNo
         {
             get { return _resultNo; }

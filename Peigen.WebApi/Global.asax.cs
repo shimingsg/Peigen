@@ -7,6 +7,7 @@ using System.Web.Routing;
 using System.Web.Security;
 using System.Web.SessionState;
 using System.Web.Http;
+using Peigen.WebApi.App_Start;
 
 namespace Peigen.WebApi
 {
@@ -18,6 +19,7 @@ namespace Peigen.WebApi
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+            FilterConfig.RegisterGlobalFilters(GlobalConfiguration.Configuration.Filters);
             DIContainer.Init();
         }
     }
