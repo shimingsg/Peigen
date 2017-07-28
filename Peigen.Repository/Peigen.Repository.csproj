@@ -68,6 +68,7 @@
     <Compile Include="DbContext\RepositoryBase.cs" />
     <Compile Include="Map\PublicNumberMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PTest.cs" />
     <Compile Include="PublicNumberRepository.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,6 @@
 ﻿using Peigen.Domain.Entities;
 using Peigen.Domain.IEntityRepository;
+using Peigen.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace Peigen.Service
     public class WeiXinService: IWeiXinService
     {
         private readonly IPublicNumberRepository _publicNumberRepository;
+        private readonly PTest test = new PTest();
         public WeiXinService(IPublicNumberRepository publicNumberRepository)
         {
             _publicNumberRepository = publicNumberRepository;
@@ -37,6 +39,11 @@ namespace Peigen.Service
         public PublicNumberEntity AddModel(PublicNumberEntity model)
         {
             return model;
+        }
+
+        public PublicNumberEntity GetById2(int Id)
+        {
+           return test.Get(x => x.F_PublicID == Id);
         }
     }
 }
