@@ -18,10 +18,10 @@ namespace Peigen.WebApi
                 return new PrincipalParameterBinding(descriptor);
             }
             //接受类型 目前未定义
-            else if (descriptor.ParameterType == typeof(Areas.Management.Controllers.WeiXinController.user))
-            {
-                return new FromUriOrBodyParameterBinding(descriptor);
-            }
+            //else if (descriptor.ParameterType == typeof(Areas.Management.Controllers.WeiXinController.user))
+            //{
+            //    return new FromUriOrBodyParameterBinding(descriptor);
+            //}
             else if (descriptor.ParameterType == typeof(string)
                 || descriptor.ParameterType == typeof(int)
                 || descriptor.ParameterType == typeof(bool)                
