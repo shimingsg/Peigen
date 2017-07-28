@@ -21,6 +21,9 @@ namespace Peigen.WebApi
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             FilterConfig.RegisterGlobalFilters(GlobalConfiguration.Configuration.Filters);
             DIContainer.Init();
+            log4net.Config.XmlConfigurator.Configure(
+             new System.IO.FileInfo(AppDomain.CurrentDomain.BaseDirectory + "log4net.config")
+           );
         }
     }
 }

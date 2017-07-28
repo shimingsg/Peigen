@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using Peigen.Common;
 using Peigen.Domain.Entities;
+using Peigen.Log;
 using Peigen.Service;
 using Peigen.WebApi.Areas.Management.Model.Rsp;
 using Peigen.WebApi.Common.IOModel;
@@ -144,6 +145,8 @@ namespace Peigen.WebApi.Areas.Management.Controllers
                 Id=x.Id,
                 Name=x.Name
             }).ToList();
+
+            CommonLogHelper.Info("调用成功！");
             return result;
         }
     }
