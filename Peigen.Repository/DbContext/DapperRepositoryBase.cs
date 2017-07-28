@@ -32,7 +32,7 @@ namespace Peigen.Repository
         {
             using (var conn= DataBaseContext.GetDefaultConnection())
             {
-                conn.Insert<T>(entity);                
+                conn.Insert(entity);                
             }
         }
         /// <summary>

@@ -165,6 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\DIContainer.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="AreaRegistation\AreaName.cs" />
@@ -176,6 +177,10 @@
     <Compile Include="Common\Core\FromUriOrBodyParameterBinding.cs" />
     <Compile Include="Common\Core\MultipleParameterFromBodyParameterBinding.cs" />
     <Compile Include="Common\Core\PrincipalParameterBinding.cs" />
+    <Compile Include="Common\IOModel\BaseModelReq.cs" />
+    <Compile Include="Common\IOModel\BaseModelRsp.cs" />
+    <Compile Include="Common\IOModel\PagingReq.cs" />
+    <Compile Include="Common\IOModel\PagingRsp.cs" />
     <Compile Include="Common\JsonValueProviderResult.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -207,6 +212,10 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Peigen.Common\Peigen.Common.csproj">
+      <Project>{3af53051-12f5-43b9-b77f-12043b702e48}</Project>
+      <Name>Peigen.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Peigen.Domain\Peigen.Domain.csproj">
       <Project>{B997F187-8E2B-44E6-AB77-D3024D63809F}</Project>
       <Name>Peigen.Domain</Name>

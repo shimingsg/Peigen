@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,24 +44,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enum\ModuleCodeEnum.cs" />
+    <Compile Include="Helper\ModuleCodeHelper.cs" />
     <Compile Include="Interface\IRepository.cs" />
+    <Compile Include="JsonHelper.cs" />
+    <Compile Include="MethodResultBase.cs" />
+    <Compile Include="MethodResultFull.cs" />
     <Compile Include="PagingResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="tem\Common.cs" />
-    <Compile Include="tem\CommonOracle.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="tem\MyBLL.cst" />
-    <None Include="tem\MyBLLBase.cst" />
-    <None Include="tem\MyDALFactory.cst" />
-    <None Include="tem\MyDALHelper.cst" />
-    <None Include="tem\MyIDAL.cst" />
-    <None Include="tem\MyIDALBase.cst" />
-    <None Include="tem\MyModelObject.cst" />
-    <None Include="tem\MyOracleDAL.cst" />
-    <None Include="tem\MySQLServerDAL.cst" />
-    <None Include="tem\MyTemplate.csp" />
-    <None Include="tem\MyTemplate.cst" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,4 +1,7 @@
-﻿using System.Collections.Specialized;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,6 +18,7 @@ namespace Peigen.WebApi
     public class MultipleParameterFromBodyParameterBinding : HttpParameterBinding
     {
         private const string MultipleBodyParameters = "MultipleBodyParameters";
+        private readonly string reqKey = "reqJson";
 
         public MultipleParameterFromBodyParameterBinding(HttpParameterDescriptor descriptor)
             : base(descriptor)
@@ -41,6 +45,35 @@ namespace Peigen.WebApi
                 bool flag = false;
                 bool.TryParse(col[Descriptor.ParameterName], out flag);
                 SetValue(actionContext, flag);
+            }
+            else if (Descriptor.ParameterType == typeof(string))
+            {
+                if (Descriptor.ParameterName == reqKey)
+                {
+                    string reqValue = col[Descriptor.ParameterName];
+                    Dictionary<string, object> dic = new Dictionary<string, object>(0);
+                    if (!string.IsNullOrEmpty(reqValue))
+                    {
+                        try
+                        {
+                            dic = JsonConvert.DeserializeObject<Dictionary<string, object>>(reqValue);
+                        }
+                        catch (Exception err)
+                        {
+                            throw new Exception("在将reqJson信息转换成Json格式数据时出错", err);
+                        }
+                    }
+                    SetValue(actionContext, dic);
+                }
+                else
+                {
+                    string result = col[Descriptor.ParameterName];
+                    if (string.IsNullOrEmpty(result))
+                    {
+                        result = "";
+                    }
+                    SetValue(actionContext, result);
+                }
             }
             else
             {

@@ -30,13 +30,15 @@ namespace Peigen.WebApi.Areas.Management.Controllers
         }
 
         [HttpPost]
-        public string GetSomething(int a, int b)
+        public string GetSomething()
         {
             //return "你很棒";
             //var a = 16;
             //var b = 5;
             //var c = Math.Ceiling((decimal)a / b);
             int[] numbers = { };
+            int count = numbers.Where(x => x == 1).Count();
+
             int[] first3Numbers = numbers.Take(30).ToArray();
             MemberFactory.GetFactory().GetUserName();
             return "";
@@ -63,6 +65,12 @@ namespace Peigen.WebApi.Areas.Management.Controllers
             var req = value.ToString();
         }
 
+        [HttpPost]
+        public string GetString(string ss)
+        {
+            return ss;
+        }
+
         public class user
         {
             public int Id { get; set; }
@@ -74,9 +82,9 @@ namespace Peigen.WebApi.Areas.Management.Controllers
         {
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            string url = "http://api.gen.com/api/WeiXin/AddModel";
+            string url = "http://api.gen.com/api/WeiXin/DoThings";
 
-            var json = "{ \"Id\": \"10\",\"Name\": \"peigen\" }";
+            var json = "{ \"Id\": \"10\",\"Name\": \"\" }";
             var jObject = JObject.Parse(json);
             var response = client.PostAsJsonAsync(url, jObject).Result;
 
@@ -88,12 +96,20 @@ namespace Peigen.WebApi.Areas.Management.Controllers
             return Request.CreateResponse(System.Net.HttpStatusCode.Accepted,
                 String.Format("{2}BindCustomCoPostMultipleParametersFromBodymplexType FristName = {0}, LastName = {1}.", firstname, lastname, id));
         }
-
-        
-        [AcceptVerbs("post","get")]
-        public HttpResponseMessage DoThings(JObject obj)
+        [HttpPost]
+        public user ReturnUser()
         {
-            return Request.CreateResponse(HttpStatusCode.OK, obj["name"]);
+            var user = new user();
+            user.Id = 1;
+            user.Name = "peigen";
+            return user;
+        }
+
+        [HttpPost]
+        public HttpResponseMessage DoThings(user obj)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, "11111");
+
         }
     }
 }
