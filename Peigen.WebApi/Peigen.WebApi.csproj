@@ -24,6 +24,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -221,10 +222,6 @@
     <ProjectReference Include="..\Peigen.Domain\Peigen.Domain.csproj">
       <Project>{B997F187-8E2B-44E6-AB77-D3024D63809F}</Project>
       <Name>Peigen.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Peigen.Log\Peigen.Log.csproj">
-      <Project>{890725A1-391C-4F00-96D2-EFB96B7FF3A8}</Project>
-      <Name>Peigen.Log</Name>
     </ProjectReference>
     <ProjectReference Include="..\Peigen.Repository\Peigen.Repository.csproj">
       <Project>{8E2903D7-0D5A-4C50-9EF7-F94DC56CF43D}</Project>
